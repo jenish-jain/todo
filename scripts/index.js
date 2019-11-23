@@ -4,39 +4,15 @@ const db = require('./store/index.js')
 const app = express()
 
 const HOSTNAME = '127.0.0.1'
-const PORT = 2222
+const PORT = 80
 app.use(express.json())
 
-var addBtn = document.getElementById('add-todo-button')
-var newTodo = document.getElementById("add-todo")
 
-addBtn.addEventListner("click", addTodo());
-
-
-function addTodo() {
-    console.log('clicked');
-    var caption = newTodo.value;
-    console.log(caption)
-    newTodo.value = ""
-    var data = JSON.stringify({
-        "caption": caption
-    });
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            console.log(this.responseText);
-        }
-    });
-
-    xhr.open("POST", "http://127.0.0.1:2222/api/todos");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(data);
-}
-
-app.use(express.json())
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 routes(app, db)
 
