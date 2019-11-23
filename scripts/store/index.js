@@ -9,14 +9,12 @@ const insertIntoStore = (caption) =>{
     }
 
     store.push(todoItem)
-    // console.log(store)
     return todoItem
 }
 
 
 const getStoreData =(id) =>{
     if(id){
-        console.log(store[id-1])
         return store[id-1]
     }else{
         return store
