@@ -22,5 +22,5 @@ const getStoreData =(id) =>{
 }
 module.exports ={
     insertIntoStore :insertIntoStore,
-    getStoreData: getStoreData
+    getStoreData: getStoreData,
 }
