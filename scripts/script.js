@@ -32,7 +32,7 @@ function addTodo() {
 
 
 function createTodo(todo){
-    console.log(todo.caption);
+    // console.log(todo.caption);
     var list = document.getElementById('todo-list');
     var ul=document.createElement("ul");
     var li=document.createElement("li");
@@ -49,7 +49,7 @@ function createTodo(todo){
     list.appendChild(ul);
 }
 
-async function displayTodo(){
+ function displayTodo(){
     // var todoCreated = await createTodo();
     // console.log('toDo created' + todoCreated);
     
@@ -61,8 +61,9 @@ async function displayTodo(){
 
     xhr.addEventListener("readystatechange", function () {
     if (this.readyState === 4) {
-    // console.log(this.responseText);
-    var todoList = JSON.parse(this.responseText)
+    console.log(this.responseText);
+    var todoList = JSON.parse(this.responseText).data
+    console.log('todoList',todoList);
     document.getElementById('todo-list').innerHTML= "";
     todoList.forEach(createTodo);
     }

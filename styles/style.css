@@ -92,6 +92,7 @@ footer{
     margin:2px;
     /* margin-bottom:-8px; */
     box-shadow: 2px 0px 5px #ff8b00;
+    transition:1s ease-in;
 }
 
 .task > span{
