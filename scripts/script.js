@@ -1,81 +1,72 @@
-var addBtn = document.getElementById("add-todo-button") // plus button beside the add todo field
-var newTodo = document.getElementById("add-todo")   // input text field
+const addBtn = document.getElementById("add-todo-button"); // + button to add todo
+const newTodo = document.getElementById("add-todo"); // input filled for new todo
+const delBtn = document.getElementsByClassName("delete");
 
-// addBtn.addEventListener("click", addTodo());
-var statusCheckbox = document.getElementsByClassName("status")
+Array.from(delBtn).forEach(function(element) {
+  element.addEventListener("click", deleteTodo());
+});
 
-function addTodo() {
-    console.log('clicked');
+const todoStatus = document.getElementsByClassName("status");
 
-    // return new Promise(function(resolve, reject){
-        var caption = newTodo.value;
-        newTodo.value = ""
-        var data = JSON.stringify({
-            "caption": caption   
-        });
-    
-        var xhr = new XMLHttpRequest();
-        
-        xhr.open("POST", "http://127.0.0.1:80/api/todos");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(data);
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-                // resolve("data-pushed");
-            }
-        });
-        displayTodo();
-    // })
+async function addTodoToDb() {
+  try {
+    console.log("adding todo");
+    let todoCaption = newTodo.value;
+    newTodo.value = "";
+    let data = JSON.stringify({
+      caption: todoCaption
+    });
+    let res = await fetch("http://127.0.0.1:80/api/todos", {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    let dataJson = await res.json();
+    console.log("Success:", JSON.stringify(dataJson));
+    // return dataJson;
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
+async function fetchTodos() {   // return todo data object
+  //   console.log('fetching all todos');
+  let res = await fetch("http://127.0.0.1:80/api/todos");
+  let data = await res.json();
+  console.log(data);
+  return data
+}
+
+async function onClick(){
+    await addTodoToDb();
+    let todoData = await fetchTodos();
+    let todoList = todoData.data;
+    document.getElementById('todo-list').innerHTML= "";
+    todoList.forEach(createTodo);
+}
 
 function createTodo(todo){
     // console.log(todo.caption);
     var list = document.getElementById('todo-list');
-    var ul=document.createElement("ul");
+    // var ul=document.createElement("ul");
     var li=document.createElement("li");
     li.classList.add("task");
+    li.setAttribute("id", todo._id);
     var status = document.createElement("input");
     status.classList.add("status");
     status.setAttribute("type", "checkbox");
-    status.setAttribute("id","status-"+ todo.id); // setting status id for each todo
+    // status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
     var caption =document.createElement("span");
     caption.innerText = todo.caption;
+    var del = document.createElement("a");
+    del.classList.add('right-align');
+    del.innerHTML = '<i class="material-icons delete">close</i>'
     li.appendChild(status);
-    li.appendChild(caption)
-    ul.appendChild(li);
-    list.appendChild(ul);
-}
-
- function displayTodo(){
-    // var todoCreated = await createTodo();
-    // console.log('toDo created' + todoCreated);
-    
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("GET", "http://127.0.0.1:80/api/todos/");
-
-    xhr.send(null);
-
-    xhr.addEventListener("readystatechange", function () {
-    if (this.readyState === 4) {
-    console.log(this.responseText);
-    var todoList = JSON.parse(this.responseText).data
-    console.log('todoList',todoList);
-    document.getElementById('todo-list').innerHTML= "";
-    todoList.forEach(createTodo);
-    }
-    });
+    li.appendChild(caption);
+    li.appendChild(del);
+    // ul.appendChild(li);
+    list.appendChild(li);
 
 }
-
-// structure of my task card 
-/*
-<ul>
-<li class="task" id="todoId">
-<input type="radio" class="status" > <label class="todo-caption"> caption</label>
-</li>
-</ul>
-*/

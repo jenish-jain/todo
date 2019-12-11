@@ -1,5 +1,5 @@
 const ObjectID =  require('mongodb').ObjectID;
-
+const COLLECTION = 'todo-collection';
 module.exports =  function(app,db){
     // db--> mondoDb
     // _id
@@ -8,7 +8,7 @@ module.exports =  function(app,db){
     app.post('/api/todos', (req,res) =>{
         const body = req.body
         if(body && body.caption){  // if body and body capton exixts in request
-            const collection = db.collection('todo-collection');
+            const collection = db.collection(COLLECTION);
             collection.insert({ // if a collection does not exist it will createa collection and insert the document in collection
                 caption:body.caption,
                 isCompleted:false
@@ -105,3 +105,6 @@ module.exports =  function(app,db){
         }
     })
 }
+
+
+// /^\d/ <regular expression for digit search

@@ -118,3 +118,19 @@ footer{
 .status:checked +span{
     text-decoration: line-through;
 }
+
+.delete{
+    font-size: 25px;
+    align-self: right;
+    display:none;
+    cursor: pointer;
+}
+
+.right-align{
+    margin-left:auto;
+}
+
+.task:hover .delete{
+display: block;
+/* background: #ffc60b; */
+}
