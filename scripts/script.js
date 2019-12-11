@@ -1,13 +1,14 @@
 const addBtn = document.getElementById("add-todo-button"); // + button to add todo
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
-
-Array.from(delBtn).forEach(function(element) {
-  element.addEventListener("click", deleteTodo());
-});
-
 const todoStatus = document.getElementsByClassName("status");
 
+    window.onload = async function(){
+    let todoData = await fetchTodos();
+    let todoList = todoData.data;
+    document.getElementById('todo-list').innerHTML= "";
+    todoList.forEach(createTodo);
+    }
 async function addTodoToDb() {
   try {
     console.log("adding todo");
@@ -48,25 +49,37 @@ async function onClick(){
 }
 
 function createTodo(todo){
-    // console.log(todo.caption);
     var list = document.getElementById('todo-list');
-    // var ul=document.createElement("ul");
     var li=document.createElement("li");
     li.classList.add("task");
     li.setAttribute("id", todo._id);
     var status = document.createElement("input");
     status.classList.add("status");
     status.setAttribute("type", "checkbox");
-    // status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
+    status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
     var caption =document.createElement("span");
     caption.innerText = todo.caption;
     var del = document.createElement("a");
+    del.setAttribute('onClick',"deleteTodo()");
     del.classList.add('right-align');
     del.innerHTML = '<i class="material-icons delete">close</i>'
     li.appendChild(status);
     li.appendChild(caption);
     li.appendChild(del);
-    // ul.appendChild(li);
     list.appendChild(li);
+}
 
+async function deleteTodo(){
+    let todo = event.target.parentNode.parentNode; // the del incon is inside a <a> tag which is inside the main task <div>
+    console.log(todo.id);
+    let delUri = "http://127.0.0.1:80/api/todos/"+todo.id;
+    await fetch(delUri,{
+        method:'DELETE',
+        headers: {'content-type': 'application/json'}
+    });
+
+    let todoData = await fetchTodos();
+    let todoList = todoData.data;
+    document.getElementById('todo-list').innerHTML= "";
+    todoList.forEach(createTodo);
 }
