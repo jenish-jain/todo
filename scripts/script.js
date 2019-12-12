@@ -2,6 +2,8 @@ const addBtn = document.getElementById("add-todo-button"); // + button to add to
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
+const hostURL = "https://infinite-sea-44135.herokuapp.com/" ; // heroku
+// const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
 
     window.onload = async function(){
     let todoData = await fetchTodos();
@@ -17,7 +19,7 @@ async function addTodoToDb() {
     let data = JSON.stringify({
       caption: todoCaption
     });
-    let res = await fetch("http://127.0.0.1:80/api/todos", {
+    let res = await fetch(hostURL, {
       method: "POST",
       body: data,
       headers: {
@@ -34,7 +36,7 @@ async function addTodoToDb() {
 
 async function fetchTodos() {   // return todo data object
   //   console.log('fetching all todos');
-  let res = await fetch("http://127.0.0.1:80/api/todos");
+  let res = await fetch(hostURL);
   let data = await res.json();
   console.log(data);
   return data
@@ -56,7 +58,7 @@ function createTodo(todo){
     var status = document.createElement("input");
     status.classList.add("status");
     status.setAttribute("type", "checkbox");
-    status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
+    // status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
     var caption =document.createElement("span");
     caption.innerText = todo.caption;
     var del = document.createElement("a");
@@ -72,7 +74,7 @@ function createTodo(todo){
 async function deleteTodo(){
     let todo = event.target.parentNode.parentNode; // the del incon is inside a <a> tag which is inside the main task <div>
     console.log(todo.id);
-    let delUri = "http://127.0.0.1:80/api/todos/"+todo.id;
+    let delUri = hostURL+todo.id;
     await fetch(delUri,{
         method:'DELETE',
         headers: {'content-type': 'application/json'}
