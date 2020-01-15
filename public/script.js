@@ -3,7 +3,7 @@ const addBtn = document.getElementById("add-todo-button"); // + button to add to
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
-const hostURL = "https://infinite-sea-44135.herokuapp.com/api/todos/" ; // heroku
+const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/" ; // heroku
 // const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
 let filter = "all";
 
@@ -118,7 +118,7 @@ async function displayTodo(selector){
     todoList.forEach(createTodo);
 }
 
- async function applyFilter (){
+ async function applyFilter(){
   let res = document.querySelectorAll("input[name=filter]:checked")[0].value;
 
   switch(res){
