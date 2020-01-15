@@ -117,7 +117,8 @@ async function displayTodo(selector){
     document.getElementById('loader').style.display='none';
     todoList.forEach(createTodo);
 }
- function applyFilter (){
+
+ async function applyFilter (){
   let res = document.querySelectorAll("input[name=filter]:checked")[0].value;
 
   switch(res){
@@ -134,5 +135,5 @@ async function displayTodo(selector){
       break;
   }
 
- displayTodo(filter);
+ await displayTodo(filter);
 }
