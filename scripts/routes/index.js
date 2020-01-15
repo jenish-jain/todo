@@ -7,11 +7,11 @@ module.exports =  function(app,db){
     // post request to insert data in database
     app.post('/api/todos', (req,res) =>{
         const body = req.body
-        if(body && body.caption){  // if body and body capton exixts in request
+        if(body && body.caption){  // if body and body capton exists in request
             const collection = db.collection(COLLECTION);
             collection.insert({ // if a collection does not exist it will createa collection and insert the document in collection
                 caption:body.caption,
-                isCompleted:false
+                isCompleted:'false'
             })//insert
             .then(result =>{// on successful creation / insertion
                 res.send({
@@ -37,11 +37,32 @@ module.exports =  function(app,db){
 
     // get request to fetch data
 
-    app.get('/api/todos/:todoId?', (req,res)=>{
+    app.get('/api/todos/:todoId?/:todoStatus?', (req,res)=>{
         // get from DB when no ID is there
         const collection = db.collection('todo-collection')
         // console.log('collections', collection);
-        const todoId = req.params.todoId;
+        const todoId = req.query.todoId;
+        const todoStatus = req.query.todoStatus;
+        if(todoStatus){
+            const findObj ={isCompleted:todoStatus}; // the query was passed as string but i have stored as boolean
+            // console.log(findObj);
+            collection
+            .find(findObj)
+            .toArray()
+            .then(data =>{
+                //console.log(data)
+                res.send({
+                 message:'success',
+                 data:data   
+                })
+            })
+            .catch(err =>{
+                res.status(400).send({
+                    status:'error',
+                    message:err
+                })
+            })
+        }
         if(todoId){ // to get specific id data
             const findObj = {'_id':new ObjectID(todoId)};
             // console.log(findObj);
@@ -77,7 +98,6 @@ module.exports =  function(app,db){
     app.delete('/api/todos/:todoId?', (req,res)=>{
         // get from DB when no ID is there
         const collection = db.collection('todo-collection')
-        // console.log('collections', collection);
         const todoId = req.params.todoId;
         if(todoId){
             const delObj = {'_id':new ObjectID(todoId)};
@@ -104,7 +124,43 @@ module.exports =  function(app,db){
             )
         }
     })
+
+    app.put('/api/todos/:todoId', (req,res)=>{
+        // get from DB when no ID is there
+        const collection = db.collection('todo-collection')
+        const todoId = req.params.todoId;
+        if(todoId){
+            // const delObj = {'_id':new ObjectID(todoId)};
+            collection.updateOne(
+                {_id:new ObjectID(todoId)},
+                {$set: { isCompleted:req.body.isCompleted}}
+            )
+            .then(
+                res.send({
+                    message:'success',
+                    deletedCount:'1'
+                })
+            )
+            .catch(err =>{
+                res.status(400).send({
+                    status:'error',
+                    message:err
+                })
+            })
+        }else{
+            collection.remove({})
+            .then(
+                res.send({
+                    status:'success',
+                    message:'all todo cleared'
+                })
+            )
+        }
+    })
+
 }
+
+
 
 
 // /^\d/ <regular expression for digit search

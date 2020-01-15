@@ -23,11 +23,14 @@
 
     <div id="menu">
         <!-- all | active | completed -->
-    <input class="menu" type="radio" name="gender" value="all"> All
-    <input class="menu" type="radio" name="gender" value="active"> Active
-    <input class="menu" type="radio" name="gender" value="completed"> Completed  
+            <input class="menu" type="radio" name="filter" value="all" onchange="applyFilter()"> All
+            <input class="menu" type="radio" name="filter" value="active" onchange="applyFilter()"> Active
+            <input class="menu" type="radio" name="filter" value="completed" onchange="applyFilter()"> Completed  
     </div>
 
+    <div id='loader' class='loader'>
+        <!-- show a loader when data is not fetched yet -->
+    </div>
     <ul id="todo-list"> 
         <!-- stores todo objects and display it in form od an unordered list -->
 

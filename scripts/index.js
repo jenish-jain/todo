@@ -4,10 +4,10 @@ const mongodb = require('mongodb');
 const DB_URI = 'mongodb+srv://jenish:Juju6397@cluster0-pa82h.mongodb.net/test?retryWrites=true&w=majority'
 const app = express()
 
-// const HOSTNAME = '127.0.0.1'
-// const PORT = 80
+const HOSTNAME = '127.0.0.1'
+const PORT = 80
 
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 
 app.use(express.json())
@@ -30,10 +30,10 @@ app.use(function(req, res, next) {
       console.log('Successfully connnected to the database instance :-)');
       const database = dbClient.db('todo-app');
       routes(app, database)
-    //   app.listen(PORT,HOSTNAME, () => { //  local host
-    app.listen(port,()=>{ // heroku
-        //   console.log(`Server started at http://${HOSTNAME}:${PORT}/`);
-        console.log(`Listening on ${port}`);
+      app.listen(PORT,HOSTNAME, () => { //  local host
+    // app.listen(port,()=>{ // heroku
+          console.log(`Server started at http://${HOSTNAME}:${PORT}/`);
+        // console.log(`Listening on ${port}`);
       })
   })
 

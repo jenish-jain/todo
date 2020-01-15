@@ -1,16 +1,20 @@
+
 const addBtn = document.getElementById("add-todo-button"); // + button to add todo
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
-const hostURL = "https://infinite-sea-44135.herokuapp.com/" ; // heroku
-// const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
+// const hostURL = "https://infinite-sea-44135.herokuapp.com/api/todos/" ; // heroku
+const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
+// let filter = localStorage.getItem("filter");
+let filter = "all";
+// console.log(filter);
+
 
     window.onload = async function(){
-    let todoData = await fetchTodos();
-    let todoList = todoData.data;
-    document.getElementById('todo-list').innerHTML= "";
-    todoList.forEach(createTodo);
+      // localStorage.setItem("filter", "all");
+    displayTodo(filter);
     }
+
 async function addTodoToDb() {
   try {
     console.log("adding todo");
@@ -34,9 +38,9 @@ async function addTodoToDb() {
   }
 }
 
-async function fetchTodos() {   // return todo data object
+async function fetchTodos(status) {   // return todo data object
   //   console.log('fetching all todos');
-  let res = await fetch(hostURL);
+  let res = await fetch(hostURL+"?todoStatus="+status);
   let data = await res.json();
   console.log(data);
   return data
@@ -44,13 +48,10 @@ async function fetchTodos() {   // return todo data object
 
 async function onClick(){
     await addTodoToDb();
-    let todoData = await fetchTodos();
-    let todoList = todoData.data;
-    document.getElementById('todo-list').innerHTML= "";
-    todoList.forEach(createTodo);
+    displayTodo(filter);
 }
 
-function createTodo(todo){
+async function createTodo(todo){
     var list = document.getElementById('todo-list');
     var li=document.createElement("li");
     li.classList.add("task");
@@ -58,7 +59,10 @@ function createTodo(todo){
     var status = document.createElement("input");
     status.classList.add("status");
     status.setAttribute("type", "checkbox");
-    // status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
+    status.setAttribute('onClick',"updateTodo()"); 
+    status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
+
+    status.checked = (todo.isCompleted == "true");
     var caption =document.createElement("span");
     caption.innerText = todo.caption;
     var del = document.createElement("a");
@@ -71,6 +75,7 @@ function createTodo(todo){
     list.appendChild(li);
 }
 
+
 async function deleteTodo(){
     let todo = event.target.parentNode.parentNode; // the del incon is inside a <a> tag which is inside the main task <div>
     console.log(todo.id);
@@ -80,8 +85,61 @@ async function deleteTodo(){
         headers: {'content-type': 'application/json'}
     });
 
-    let todoData = await fetchTodos();
-    let todoList = todoData.data;
-    document.getElementById('todo-list').innerHTML= "";
+   displayTodo(filter);
+}
+
+async function updateTodo(){
+  console.log("updating todo");
+  let todo = event.target.parentNode;
+  console.log(todo.id);
+  let status = event.target.checked.toString();
+  // console.log(status);
+  let updateUri = hostURL + todo.id;
+  let data = JSON.stringify({
+    isCompleted: status
+  });
+  console.log(updateUri);
+  let res = await fetch(updateUri,{
+    method:'PUT',
+    body:data,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+  console.log(res);
+  // displayTodo();
+  // let dataJson = await res.json();
+    // console.log("Success:", JSON.stringify(dataJson));
+    // return dataJson; 
+}
+
+async function displayTodo(selector){
+  let todoData = await fetchTodos(selector);
+  let todoList = todoData.data;
+  document.getElementById('todo-list').innerHTML=" ";
+    document.getElementById('loader').style.display='none';
     todoList.forEach(createTodo);
+}
+ function applyFilter (){
+  let res = document.querySelectorAll("input[name=filter]:checked")[0].value;
+  // console.log(res);
+  
+// localStorage.setItem("filter", res);
+
+// console.log(localStorage.getItem("filter"));
+  switch(res){
+    case 'active':
+      filter = 'false';
+      break;
+
+    case 'completed':
+      filter = 'true';
+      break;
+
+    case 'all':
+      filter = '';
+      break;
+  }
+
+ displayTodo(filter);
 }
