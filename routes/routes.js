@@ -156,7 +156,7 @@ module.exports = function(app, db) {
         .then(
           res.send({
             message: "success",
-            deletedCount: "1"
+            updatedCount: "1"
           })
         )
         .catch(err => {

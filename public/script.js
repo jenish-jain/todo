@@ -4,7 +4,7 @@ const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
 const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/"; // heroku
 // const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
-let filter = "";
+let filter = ""; // at start display all todos
 
 window.onload = async function() {
   await displayTodo(filter);
@@ -27,7 +27,6 @@ async function addTodoToDb() {
     });
     const dataJson = await res.json();
     console.log("Success:", JSON.stringify(dataJson));
-    // return dataJson;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -35,7 +34,6 @@ async function addTodoToDb() {
 
 async function fetchTodos(status) {
   // return todo data object
-  //   console.log('fetching all todos');
   const res = await fetch(hostURL + "?todoStatus=" + status);
   const data = await res.json();
   console.log(data);
@@ -101,16 +99,12 @@ async function updateTodo() {
     }
   });
   console.log(res);
-  // displayTodo();
-  // let dataJson = await res.json();
-  // console.log("Success:", JSON.stringify(dataJson));
-  // return dataJson;
 }
 
 async function displayTodo(selector) {
+  document.getElementById("todo-list").innerHTML = " ";
   const todoData = await fetchTodos(selector);
   const todoList = todoData.data;
-  document.getElementById("todo-list").innerHTML = " ";
   document.getElementById("loader").style.display = "none";
   todoList.forEach(createTodo);
 }
