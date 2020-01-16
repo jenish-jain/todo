@@ -1,33 +1,31 @@
-
 const addBtn = document.getElementById("add-todo-button"); // + button to add todo
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
-const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/" ; // heroku
+const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/"; // heroku
 // const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
-let filter = "all";
+let filter = "";
 
-
-    window.onload = async function(){
-    displayTodo(filter);
-    }
+window.onload = async function() {
+  await displayTodo(filter);
+};
 
 async function addTodoToDb() {
   try {
     console.log("adding todo");
     let todoCaption = newTodo.value;
     newTodo.value = "";
-    let data = JSON.stringify({
+    const data = JSON.stringify({
       caption: todoCaption
     });
-    let res = await fetch(hostURL, {
+    const res = await fetch(hostURL, {
       method: "POST",
       body: data,
       headers: {
         "Content-Type": "application/json"
       }
     });
-    let dataJson = await res.json();
+    const dataJson = await res.json();
     console.log("Success:", JSON.stringify(dataJson));
     // return dataJson;
   } catch (error) {
@@ -35,70 +33,69 @@ async function addTodoToDb() {
   }
 }
 
-async function fetchTodos(status) {   // return todo data object
+async function fetchTodos(status) {
+  // return todo data object
   //   console.log('fetching all todos');
-  let res = await fetch(hostURL+"?todoStatus="+status);
-  let data = await res.json();
+  const res = await fetch(hostURL + "?todoStatus=" + status);
+  const data = await res.json();
   console.log(data);
-  return data
+  return data;
 }
 
-async function onClick(){
-    await addTodoToDb();
-    displayTodo(filter);
+async function onClick() {
+  await addTodoToDb();
+  displayTodo(filter);
 }
 
-async function createTodo(todo){
-    var list = document.getElementById('todo-list');
-    var li=document.createElement("li");
-    li.classList.add("task");
-    li.setAttribute("id", todo._id);
-    var status = document.createElement("input");
-    status.classList.add("status");
-    status.setAttribute("type", "checkbox");
-    status.setAttribute('onClick',"updateTodo()"); 
-    status.setAttribute("id","status-"+ todo._id); // setting status id for each todo
-
-    status.checked = (todo.isCompleted == "true");
-    var caption =document.createElement("span");
-    caption.innerText = todo.caption;
-    var del = document.createElement("a");
-    del.setAttribute('onClick',"deleteTodo()");
-    del.classList.add('right-align');
-    del.innerHTML = '<i class="material-icons delete">close</i>'
-    li.appendChild(status);
-    li.appendChild(caption);
-    li.appendChild(del);
-    list.appendChild(li);
+function createTodo(todo) {
+  const list = document.getElementById("todo-list");
+  const li = document.createElement("li");
+  li.classList.add("task");
+  li.setAttribute("id", todo._id);
+  const status = document.createElement("input");
+  status.classList.add("status");
+  status.setAttribute("type", "checkbox");
+  status.setAttribute("onClick", "updateTodo()");
+  status.setAttribute("id", "status-" + todo._id); // setting status id for each todo
+  status.checked = todo.isCompleted == "true";
+  const caption = document.createElement("span");
+  caption.innerText = todo.caption;
+  const del = document.createElement("a");
+  del.setAttribute("onClick", "deleteTodo()");
+  del.classList.add("right-align");
+  del.innerHTML = '<i class="material-icons delete">close</i>';
+  li.appendChild(status);
+  li.appendChild(caption);
+  li.appendChild(del);
+  list.appendChild(li);
 }
 
-
-async function deleteTodo(){
-    let todo = event.target.parentNode.parentNode; // the del incon is inside a <a> tag which is inside the main task <div>
-    console.log(todo.id);
-    let delUri = hostURL+todo.id;
-    await fetch(delUri,{
-        method:'DELETE',
-        headers: {'content-type': 'application/json'}
-    });
-
-   displayTodo(filter);
-}
-
-async function updateTodo(){
-  console.log("updating todo");
-  let todo = event.target.parentNode;
+async function deleteTodo() {
+  const todo = event.target.parentNode.parentNode; // the del icon is inside a <a> tag which is inside the main task <div>
   console.log(todo.id);
-  let status = event.target.checked.toString();
+  const delUri = hostURL + todo.id;
+  await fetch(delUri, {
+    method: "DELETE",
+    headers: { "content-type": "application/json" }
+  });
+
+  await displayTodo(filter);
+}
+
+async function updateTodo() {
+  console.log("updating todo");
+  const todo = event.target.parentNode;
+  console.log(todo.id);
+  const status = event.target.checked.toString();
   // console.log(status);
-  let updateUri = hostURL + todo.id;
-  let data = JSON.stringify({
+  const updateUri = hostURL + todo.id;
+  const data = JSON.stringify({
     isCompleted: status
   });
   console.log(updateUri);
-  let res = await fetch(updateUri,{
-    method:'PUT',
-    body:data,
+  let res = await fetch(updateUri, {
+    method: "PUT",
+    body: data,
     headers: {
       "Content-Type": "application/json"
     }
@@ -106,34 +103,34 @@ async function updateTodo(){
   console.log(res);
   // displayTodo();
   // let dataJson = await res.json();
-    // console.log("Success:", JSON.stringify(dataJson));
-    // return dataJson; 
+  // console.log("Success:", JSON.stringify(dataJson));
+  // return dataJson;
 }
 
-async function displayTodo(selector){
-  let todoData = await fetchTodos(selector);
-  let todoList = todoData.data;
-  document.getElementById('todo-list').innerHTML=" ";
-    document.getElementById('loader').style.display='none';
-    todoList.forEach(createTodo);
+async function displayTodo(selector) {
+  const todoData = await fetchTodos(selector);
+  const todoList = todoData.data;
+  document.getElementById("todo-list").innerHTML = " ";
+  document.getElementById("loader").style.display = "none";
+  todoList.forEach(createTodo);
 }
 
- async function applyFilter(){
-  let res = document.querySelectorAll("input[name=filter]:checked")[0].value;
+async function applyFilter() {
+  const res = document.querySelectorAll("input[name=filter]:checked")[0].value;
 
-  switch(res){
-    case 'active':
-      filter = 'false';
+  switch (res) {
+    case "active":
+      filter = "false";
       break;
 
-    case 'completed':
-      filter = 'true';
+    case "completed":
+      filter = "true";
       break;
 
-    case 'all':
-      filter = '';
+    case "all":
+      filter = "";
       break;
   }
 
- await displayTodo(filter);
+  await displayTodo(filter);
 }

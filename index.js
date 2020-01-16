@@ -39,8 +39,9 @@ mongodb.MongoClient.connect(DB_URI, (error, dbClient) => {
   const database = dbClient.db("todo-app");
   routes(app, database);
   // app.listen(PORT, HOSTNAME, () => {
-    //  local host
-    app.listen(port,()=>{ // heroku
+  //  local host
+  app.listen(port, () => {
+    // heroku
     // console.log(`Server started at http://${HOSTNAME}:${PORT}/`);
     console.log(`Listening on ${port}`);
   });

@@ -18,20 +18,20 @@
 
     <div id="new-todo">
         <input id="add-todo" type="text" name="add" placeholder="Add new ToDo">
-        <a id="add-todo-button"href="#" onclick="onClick()"><i class="material-icons">add_circle_outline</i></a>
+        <a id="add-todo-button" href="#" onclick="onClick()"><i class="material-icons">add_circle_outline</i></a>
     </div>
 
     <div id="menu">
         <!-- all | active | completed -->
-            <input class="menu" type="radio" name="filter" value="all" checked='true' onchange="applyFilter()"> All
-            <input class="menu" type="radio" name="filter" value="active" onchange="applyFilter()"> Active
-            <input class="menu" type="radio" name="filter" value="completed" onchange="applyFilter()"> Completed  
+        <input class="menu" type="radio" name="filter" value="all" checked='true' onchange="applyFilter()"> All
+        <input class="menu" type="radio" name="filter" value="active" onchange="applyFilter()"> Active
+        <input class="menu" type="radio" name="filter" value="completed" onchange="applyFilter()"> Completed
     </div>
 
     <div id='loader' class='loader'>
         <!-- show a loader when data is not fetched yet -->
     </div>
-    <ul id="todo-list"> 
+    <ul id="todo-list">
         <!-- stores todo objects and display it in form od an unordered list -->
 
     </ul>
