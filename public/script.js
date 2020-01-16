@@ -2,8 +2,8 @@ const addBtn = document.getElementById("add-todo-button"); // + button to add to
 const newTodo = document.getElementById("add-todo"); // input filled for new todo
 const delBtn = document.getElementsByClassName("delete");
 const todoStatus = document.getElementsByClassName("status");
-// const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/"; // heroku
-const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
+const hostURL = "https://aqueous-sierra-52550.herokuapp.com/api/todos/"; // heroku
+// const hostURL = "http://127.0.0.1:80/api/todos/"; //localhost
 let filter = ""; // at start display all todos
 
 window.onload = async function() {
