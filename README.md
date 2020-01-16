@@ -10,9 +10,9 @@
 
 ## link to project
 
-    https://aqueous-sierra-52550.herokuapp.com/
+https://aqueous-sierra-52550.herokuapp.com/
 
 ## link to api documentation
 
-    https://documenter.getpostman.com/view/9390943/SWEB1vQF?version=latest
+[Api Documentation](https://documenter.getpostman.com/view/9390943/SWEB1vQF?version=latest)
 
