@@ -8,7 +8,7 @@ const app = express();
 // const HOSTNAME = "127.0.0.1";
 // const PORT = 80;
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.use(express.json());
 // prevent CORS error
